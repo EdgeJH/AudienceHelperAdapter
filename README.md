@@ -189,7 +189,7 @@ public class AdCustomAdapter extends FBCustomAdapter<AdCustomAdapter.MyHolder,Ad
 License
 --------
 ```
-Copyright 2017 EdgJH
+Copyright 2017 EdgeJH
 
 
 Licensed under the Apache License, Version 2.0 (the "License");

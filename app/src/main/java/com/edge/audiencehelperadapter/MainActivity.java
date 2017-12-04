@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements FBLoadListener{
     }
 
     private void setManager(){
-        manager = new FBAdManager.Builder("400285197058008_400386333714561",getApplicationContext())
+        manager = new FBAdManager.Builder("YOUR_PLACEMENT_ID",getApplicationContext())
                 .setAdLoadCount(20)
                 .setListener(this)
                 .isCaching(true)
@@ -76,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements FBLoadListener{
 
     @Override
     public void onLoadFail(AdError error) {
-        Log.d("aaaaa",error.getErrorMessage());
         setAdapter(null);
     }
 

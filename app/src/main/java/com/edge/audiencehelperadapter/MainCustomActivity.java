@@ -42,7 +42,7 @@ public class MainCustomActivity extends AppCompatActivity implements FBLoadListe
     }
 
     private void setManager(){
-        manager = new FBAdManager.Builder("400285197058008_400386333714561",getApplicationContext())
+        manager = new FBAdManager.Builder("YOUR_PLACEMENT_ID",getApplicationContext())
                 .setAdLoadCount(20)
                 .setListener(this)
                 .build();

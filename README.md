@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements FBLoadListener{
 
 
     private void setManager(){
-        manager = new FBAdManager.Builder("400285197058008_400386333714561",getApplicationContext())
+        manager = new FBAdManager.Builder("YOUR PLACEMENT ID",getApplicationContext())
                 .setAdLoadCount(20)
                 .setListener(this)
                 .isCaching(true)

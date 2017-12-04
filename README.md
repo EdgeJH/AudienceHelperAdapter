@@ -3,6 +3,7 @@ AudienceHelperAdapter
 FaceBook Audience Helper
 
 
+![Audience](/Audience.gif)
 Gradle
 ------------
 ```groovy

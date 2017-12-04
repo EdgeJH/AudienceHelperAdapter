@@ -14,13 +14,14 @@ allprojects {
 ```
 ```groovy
 dependencies {
+    compile 'com.facebook.android:audience-network-sdk:4.+'
     compile 'com.github.EdgeJH:AudienceHelperAdapter:1.0.0'
 }
 ```
 
 Usage
 --------
-Activity 
+### Activity 
 
 ```java
 public class MainActivity extends AppCompatActivity implements FBLoadListener{
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements FBLoadListener{
  }
 ```
 
-Instagram Layout Audience Adapter
+### Instagram Layout Audience Adapter
 
 ```java
 public class AdAdapter extends FBAdapter<AdAdapter.CustomHolder> {
@@ -99,7 +100,7 @@ public class AdAdapter extends FBAdapter<AdAdapter.CustomHolder> {
 ```
 
 
-MyCustomLayout Audience Adapter
+### MyCustomLayout Audience Adapter
 
 ```java
 public class AdCustomAdapter extends FBCustomAdapter<AdCustomAdapter.MyHolder,AdCustomAdapter.AdHolder> {

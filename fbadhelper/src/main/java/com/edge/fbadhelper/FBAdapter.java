@@ -65,9 +65,6 @@ public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
             addSort(0);
             notifyItemInserted(index+1);
         }
-
-
-
     }
     public void clear(){
         arrayList.clear();
@@ -93,8 +90,8 @@ public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
 
     private void addSort(int index){
         for (int i =0; i< arrayList.size(); i++){
-            if ((i%adInterval)==0&&i!=0&&i!=index){
-                Collections.swap(arrayList,i-1,i);
+            if ((i%adInterval)==0&&i!=0&&i!=index&&i+1<arrayList.size()){
+                Collections.swap(arrayList,i+1,i);
             }
         }
     }

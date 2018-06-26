@@ -33,14 +33,11 @@ public abstract class FBCustomAdapter<T extends RecyclerView.ViewHolder,E extend
         setArrayList();
     }
 
-
-
     private void setArrayList(){
-        int count =0;
+
         for (int i =0; i<arrayList.size(); i++){
             if ((i%adInterval)==0&&i!=0){
-                arrayList.add(count+i,null);
-                count++;
+                arrayList.add(i,null);
             }
         }
     }
@@ -52,18 +49,20 @@ public abstract class FBCustomAdapter<T extends RecyclerView.ViewHolder,E extend
         notifyItemInserted(arrayList.size());
     }
     public void addData(int index ,Object data){
-        if ((index%adInterval)==0){
-            arrayList.add(index+1,data);
-            addSort(index);
-            notifyItemInserted(index+1);
+        if (arrayList.size()!=0){
+            if ((index%adInterval)==0){
+                arrayList.add(index+1,data);
+                addSort(index);
+                notifyItemInserted(index+1);
+            } else {
+                arrayList.add(0,data);
+                addSort(0);
+                notifyItemInserted(index+1);
+            }
         } else {
-            arrayList.add(0,data);
-            addSort(0);
-            notifyItemInserted(index+1);
+            arrayList.add(index,data);
+            notifyItemInserted(index);
         }
-
-
-
     }
     public void clear(){
         arrayList.clear();
@@ -89,8 +88,8 @@ public abstract class FBCustomAdapter<T extends RecyclerView.ViewHolder,E extend
 
     private void addSort(int index){
         for (int i =0; i< arrayList.size(); i++){
-            if ((i%adInterval)==0&&i!=0&&i!=index){
-                Collections.swap(arrayList,i-1,i);
+            if ((i%adInterval)==0&&i!=0&&i!=index&&i+1<arrayList.size()){
+                Collections.swap(arrayList,i+1,i);
             }
         }
     }

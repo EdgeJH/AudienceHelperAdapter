@@ -8,6 +8,7 @@ import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdsManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by user1 on 2017-12-01.
@@ -35,12 +36,72 @@ public abstract class FBCustomAdapter<T extends RecyclerView.ViewHolder,E extend
 
 
     private void setArrayList(){
+        int count =0;
         for (int i =0; i<arrayList.size(); i++){
-            if ((i%adInterval)==0&i!=0){
-                arrayList.add(i,null);
+            if ((i%adInterval)==0&&i!=0){
+                arrayList.add(count+i,null);
+                count++;
             }
         }
     }
+    public void addData(Object data){
+        if ((arrayList.size())%adInterval==0){
+            arrayList.add(null);
+        }
+        arrayList.add(data);
+        notifyItemInserted(arrayList.size());
+    }
+    public void addData(int index ,Object data){
+        if ((index%adInterval)==0){
+            arrayList.add(index+1,data);
+            addSort(index);
+            notifyItemInserted(index+1);
+        } else {
+            arrayList.add(0,data);
+            addSort(0);
+            notifyItemInserted(index+1);
+        }
+
+
+
+    }
+    public void clear(){
+        arrayList.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAllData(ArrayList arrayList){
+        this.arrayList = arrayList;
+        setArrayList();
+    }
+    public void removeData(int position){
+        if ((position%adInterval)!=0){
+            arrayList.remove(position);
+            removeSort();
+            notifyItemRemoved(position);
+        }
+        if (position==0){
+            arrayList.remove(0);
+            removeSort();
+            notifyItemRemoved(position);
+        }
+    }
+
+    private void addSort(int index){
+        for (int i =0; i< arrayList.size(); i++){
+            if ((i%adInterval)==0&&i!=0&&i!=index){
+                Collections.swap(arrayList,i-1,i);
+            }
+        }
+    }
+    private void removeSort(){
+        for (int i =0; i< arrayList.size(); i++){
+            if ((i%adInterval)==0&&i!=0){
+                Collections.swap(arrayList,i-1,i);
+            }
+        }
+    }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

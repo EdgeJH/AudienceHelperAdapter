@@ -6,15 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.edge.fbadhelper.FBAdapterSetting;
 import com.edge.fbadhelper.FBCustomAdapter;
+import com.facebook.ads.AdIconView;
 import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by user1 on 2017-12-04.
@@ -44,8 +46,14 @@ public class AdCustomAdapter extends FBCustomAdapter<AdCustomAdapter.MyHolder,Ad
     }
 
     @Override
-    public void onBindMyViewHolder(MyHolder holder, int position) {
+    public void onBindMyViewHolder(MyHolder holder, final int position) {
         holder.textView.setText(arrayList.get(position));
+        holder.textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeData(position);
+            }
+        });
     }
 
     @Override
@@ -63,12 +71,13 @@ public class AdCustomAdapter extends FBCustomAdapter<AdCustomAdapter.MyHolder,Ad
 
     class AdHolder extends RecyclerView.ViewHolder {
         private MediaView mAdMedia;
-        private ImageView mAdIcon;
+        private AdIconView mAdIcon;
         private TextView mAdTitle;
         private TextView mAdBody;
         private TextView mAdSocialContext;
         private Button mAdCallToAction;
-
+        LinearLayout container;
+        List<View> clickableViews = new ArrayList<>();
         public AdHolder(View view) {
             super(view);
 
@@ -77,7 +86,11 @@ public class AdCustomAdapter extends FBCustomAdapter<AdCustomAdapter.MyHolder,Ad
             mAdBody = (TextView) view.findViewById(R.id.native_ad_body);
             mAdSocialContext = (TextView) view.findViewById(R.id.native_ad_social_context);
             mAdCallToAction = (Button)view.findViewById(R.id.native_ad_call_to_action);
-            mAdIcon = (ImageView)view.findViewById(R.id.native_ad_icon);
+            mAdIcon = view.findViewById(R.id.native_ad_icon);
+            mAdMedia = view.findViewById(R.id.native_ad_media);
+            container= view.findViewById(R.id.ad_choices_container);
+            clickableViews.add(mAdMedia);
+            clickableViews.add(mAdCallToAction);
 
         }
 
@@ -87,13 +100,11 @@ public class AdCustomAdapter extends FBCustomAdapter<AdCustomAdapter.MyHolder,Ad
                 mAdBody.setText("Ad is not loaded.");
             }
             else {
-                mAdTitle.setText(ad.getAdTitle());
-                mAdBody.setText(ad.getAdBody());
+                mAdTitle.setText(ad.getAdvertiserName());
+                mAdBody.setText(ad.getAdBodyText());
                 mAdSocialContext.setText(ad.getAdSocialContext());
                 mAdCallToAction.setText(ad.getAdCallToAction());
-                mAdMedia.setNativeAd(ad);
-                NativeAd.Image adIcon = ad.getAdIcon();
-                NativeAd.downloadAndDisplayImage(adIcon, mAdIcon);
+                ad.registerViewForInteraction(container, mAdMedia,mAdIcon,clickableViews);
             }
         }
     }

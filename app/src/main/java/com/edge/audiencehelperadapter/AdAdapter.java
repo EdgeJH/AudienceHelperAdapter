@@ -33,8 +33,14 @@ public class AdAdapter extends FBAdapter<AdAdapter.CustomHolder> {
     }
 
     @Override
-    public void onFBBindViewHolder(CustomHolder holder, int position) {
+    public void onFBBindViewHolder(final CustomHolder holder, int position) {
         holder.textView.setText(arrayList.get(position));
+        holder.textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeData(holder.getAdapterPosition());
+            }
+        });
     }
 
 

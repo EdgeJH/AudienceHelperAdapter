@@ -92,6 +92,14 @@ public class MainCustomActivity extends AppCompatActivity implements FBLoadListe
                 startActivity(intent);
                 finish();
                 return true;
+            case R.id.add:
+                int i = arrayList.size();
+                adapter.addData(String.valueOf(i) + String.valueOf(i) + String.valueOf(i));
+                return true;
+            case R.id.add_index:
+                int i2 = arrayList.size();
+                adapter.addData(3,String.valueOf(i2) + String.valueOf(i2) + String.valueOf(i2));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

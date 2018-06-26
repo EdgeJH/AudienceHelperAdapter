@@ -5,15 +5,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.ads.AdIconView;
 import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdsManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,9 +41,67 @@ public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     private void setArrayList(){
+
         for (int i =0; i<arrayList.size(); i++){
-            if ((i%adInterval)==0&i!=0){
+            if ((i%adInterval)==0&&i!=0){
                 arrayList.add(i,null);
+            }
+        }
+    }
+    public void addData(Object data){
+        if ((arrayList.size())%adInterval==0){
+            arrayList.add(null);
+        }
+        arrayList.add(data);
+        notifyItemInserted(arrayList.size());
+    }
+    public void addData(int index ,Object data){
+        if ((index%adInterval)==0){
+            arrayList.add(index+1,data);
+            addSort(index);
+            notifyItemInserted(index+1);
+        } else {
+            arrayList.add(0,data);
+            addSort(0);
+            notifyItemInserted(index+1);
+        }
+
+
+
+    }
+    public void clear(){
+        arrayList.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAllData(ArrayList arrayList){
+        this.arrayList = arrayList;
+        setArrayList();
+    }
+    public void removeData(int position){
+        if ((position%adInterval)!=0){
+            arrayList.remove(position);
+            removeSort();
+            notifyItemRemoved(position);
+        }
+        if (position==0){
+            arrayList.remove(0);
+            removeSort();
+            notifyItemRemoved(position);
+        }
+    }
+
+    private void addSort(int index){
+        for (int i =0; i< arrayList.size(); i++){
+            if ((i%adInterval)==0&&i!=0&&i!=index){
+                Collections.swap(arrayList,i-1,i);
+            }
+        }
+    }
+    private void removeSort(){
+        for (int i =0; i< arrayList.size(); i++){
+            if ((i%adInterval)==0&&i!=0){
+                Collections.swap(arrayList,i-1,i);
             }
         }
     }
@@ -89,6 +148,7 @@ public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
+
         if (position==0){
             return POST_TYPE;
         } else {
@@ -97,7 +157,7 @@ public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public  class AdHolder extends RecyclerView.ViewHolder {
-        ImageView nativeAdIcon;
+        AdIconView nativeAdIcon;
         TextView nativeAdTitle,nativeAdSocialContext,nativeAdBody,nativeAdCallToAction;
         MediaView nativeAdMedia;
         List<View> clickableViews = new ArrayList<>();
@@ -106,13 +166,14 @@ public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
         public AdHolder(View view) {
             super(view);
 
-            nativeAdIcon = (ImageView) view.findViewById(R.id.native_ad_icon);
-            nativeAdTitle = (TextView) view.findViewById(R.id.native_ad_title);
-            nativeAdContainer = (LinearLayout) view.findViewById(R.id.native_ad_container);
-            nativeAdMedia = (MediaView) view.findViewById(R.id.native_ad_media);
-            nativeAdSocialContext = (TextView) view.findViewById(R.id.native_ad_social_context);
-            nativeAdBody = (TextView) view.findViewById(R.id.native_ad_body);
-            nativeAdCallToAction = (TextView) view.findViewById(R.id.native_ad_call_to_action);
+            nativeAdIcon = view.findViewById(R.id.native_ad_icon);
+            nativeAdTitle = view.findViewById(R.id.native_ad_title);
+            nativeAdContainer =  view.findViewById(R.id.native_ad_container);
+            nativeAdMedia =  view.findViewById(R.id.native_ad_media);
+            nativeAdSocialContext =view.findViewById(R.id.native_ad_social_context);
+            nativeAdBody =  view.findViewById(R.id.native_ad_body);
+            nativeAdCallToAction = view.findViewById(R.id.native_ad_call_to_action);
+
             clickableViews.add(nativeAdMedia);
             clickableViews.add(nativeAdCallToAction);
         }
@@ -124,17 +185,11 @@ public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
                 nativeAdTitle.setText("No Ad");
                 nativeAdBody.setText("Ad is not loaded.");
             } else {
-                nativeAdTitle.setText(ad.getAdTitle());
+                nativeAdTitle.setText(ad.getAdvertiserName());
                 nativeAdSocialContext.setText(ad.getAdSocialContext());
-                nativeAdBody.setText(ad.getAdBody());
+                nativeAdBody.setText(ad.getAdBodyText());
                 nativeAdCallToAction.setText(ad.getAdCallToAction());
-
-                // Download and display the ad icon.
-                NativeAd.Image adIcon = ad.getAdIcon();
-                NativeAd.downloadAndDisplayImage(adIcon, nativeAdIcon);
-                // Download and display the cover image.
-                nativeAdMedia.setNativeAd(ad);
-                ad.registerViewForInteraction(nativeAdContainer, clickableViews);
+                ad.registerViewForInteraction(nativeAdContainer, nativeAdMedia,nativeAdIcon,clickableViews);
             }
         }
     }

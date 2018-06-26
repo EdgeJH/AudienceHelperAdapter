@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements FBLoadListener{
 
     private void setAdapter(NativeAdsManager nativeAdsManager){
         FBAdapterSetting setting = new FBAdapterSetting.Builder()
-                .setAdInterval(10)
+                .setAdInterval(3)
                 .setAdsManager(nativeAdsManager)
                 .build();
         adapter = new AdAdapter(getApplicationContext(),arrayList,setting);
@@ -92,6 +92,14 @@ public class MainActivity extends AppCompatActivity implements FBLoadListener{
                 Intent intent = new Intent(this,MainCustomActivity.class);
                 startActivity(intent);
                 finish();
+                return true;
+            case R.id.add:
+                int i = arrayList.size();
+                adapter.addData(String.valueOf(i) + String.valueOf(i) + String.valueOf(i));
+                return true;
+            case R.id.add_index:
+                int i2 = arrayList.size();
+                adapter.addData(3,String.valueOf(i2) + String.valueOf(i2) + String.valueOf(i2));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

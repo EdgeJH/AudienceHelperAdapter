@@ -17,7 +17,7 @@ allprojects {
 ```groovy
 dependencies {
     compile 'com.facebook.android:audience-network-sdk:4.+'
-    compile 'com.github.EdgeJH:AudienceHelperAdapter:1.0.2'
+    compile 'com.github.EdgeJH:AudienceHelperAdapter:1.0.3'
 }
 ```
 

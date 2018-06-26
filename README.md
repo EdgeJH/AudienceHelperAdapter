@@ -153,16 +153,15 @@ public class AdCustomAdapter extends FBCustomAdapter<AdCustomAdapter.MyHolder,Ad
         private TextView mAdBody;
         private TextView mAdSocialContext;
         private Button mAdCallToAction;
-        LinearLayout container;
-        List<View> clickableViews = new ArrayList<>();
+        private LinearLayout container;
+        private List<View> clickableViews = new ArrayList<>();
         public AdHolder(View view) {
             super(view);
 
-            mAdMedia = (MediaView) view.findViewById(R.id.native_ad_media);
-            mAdTitle = (TextView) view.findViewById(R.id.native_ad_title);
-            mAdBody = (TextView) view.findViewById(R.id.native_ad_body);
-            mAdSocialContext = (TextView) view.findViewById(R.id.native_ad_social_context);
-            mAdCallToAction = (Button)view.findViewById(R.id.native_ad_call_to_action);
+            mAdTitle = view.findViewById(R.id.native_ad_title);
+            mAdBody = view.findViewById(R.id.native_ad_body);
+            mAdSocialContext =  view.findViewById(R.id.native_ad_social_context);
+            mAdCallToAction =view.findViewById(R.id.native_ad_call_to_action);
             mAdIcon = view.findViewById(R.id.native_ad_icon);
             mAdMedia = view.findViewById(R.id.native_ad_media);
             container= view.findViewById(R.id.ad_choices_container);

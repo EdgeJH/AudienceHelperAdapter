@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements FBLoadListener {
         recyclerView.setLayoutManager(layoutManager);
     }
 
-    private void dataAddIndext(int  index,Object data){
+    private void dataAddIndex(int  index,Object data){
         adapter.addData(index,data);
     }
 

@@ -17,7 +17,7 @@ allprojects {
 ```groovy
 dependencies {
     compile 'com.facebook.android:audience-network-sdk:4.+'
-    compile 'com.github.EdgeJH:AudienceHelperAdapter:1.0.0'
+    compile 'com.github.EdgeJH:AudienceHelperAdapter:1.0.3'
 }
 ```
 
@@ -146,23 +146,27 @@ public class AdCustomAdapter extends FBCustomAdapter<AdCustomAdapter.MyHolder,Ad
         }
     }
 
-    class AdHolder extends RecyclerView.ViewHolder {
+  class AdHolder extends RecyclerView.ViewHolder {
         private MediaView mAdMedia;
-        private ImageView mAdIcon;
+        private AdIconView mAdIcon;
         private TextView mAdTitle;
         private TextView mAdBody;
         private TextView mAdSocialContext;
         private Button mAdCallToAction;
-
+        private LinearLayout container;
+        private List<View> clickableViews = new ArrayList<>();
         public AdHolder(View view) {
             super(view);
 
-            mAdMedia = (MediaView) view.findViewById(R.id.native_ad_media);
-            mAdTitle = (TextView) view.findViewById(R.id.native_ad_title);
-            mAdBody = (TextView) view.findViewById(R.id.native_ad_body);
-            mAdSocialContext = (TextView) view.findViewById(R.id.native_ad_social_context);
-            mAdCallToAction = (Button)view.findViewById(R.id.native_ad_call_to_action);
-            mAdIcon = (ImageView)view.findViewById(R.id.native_ad_icon);
+            mAdTitle = view.findViewById(R.id.native_ad_title);
+            mAdBody = view.findViewById(R.id.native_ad_body);
+            mAdSocialContext =  view.findViewById(R.id.native_ad_social_context);
+            mAdCallToAction =view.findViewById(R.id.native_ad_call_to_action);
+            mAdIcon = view.findViewById(R.id.native_ad_icon);
+            mAdMedia = view.findViewById(R.id.native_ad_media);
+            container= view.findViewById(R.id.ad_choices_container);
+            clickableViews.add(mAdMedia);
+            clickableViews.add(mAdCallToAction);
 
         }
 
@@ -172,13 +176,11 @@ public class AdCustomAdapter extends FBCustomAdapter<AdCustomAdapter.MyHolder,Ad
                 mAdBody.setText("Ad is not loaded.");
             }
             else {
-                mAdTitle.setText(ad.getAdTitle());
-                mAdBody.setText(ad.getAdBody());
+                mAdTitle.setText(ad.getAdvertiserName());
+                mAdBody.setText(ad.getAdBodyText());
                 mAdSocialContext.setText(ad.getAdSocialContext());
                 mAdCallToAction.setText(ad.getAdCallToAction());
-                mAdMedia.setNativeAd(ad);
-                NativeAd.Image adIcon = ad.getAdIcon();
-                NativeAd.downloadAndDisplayImage(adIcon, mAdIcon);
+                ad.registerViewForInteraction(container, mAdMedia,mAdIcon,clickableViews);
             }
         }
     }

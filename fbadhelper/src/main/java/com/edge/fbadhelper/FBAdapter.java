@@ -56,14 +56,20 @@ public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
         notifyItemInserted(arrayList.size());
     }
     public void addData(int index ,Object data){
-        if ((index%adInterval)==0){
-            arrayList.add(index+1,data);
-            addSort(index);
-            notifyItemInserted(index+1);
+        if (arrayList.size()!=0){
+            if ((index%adInterval)!=0){
+                arrayList.add(index,data);
+                removeSort();
+                notifyItemInserted(index);
+            }
+            if (index==0){
+                arrayList.add(0,data);
+                removeSort();
+                notifyItemInserted(index);
+            }
         } else {
-            arrayList.add(0,data);
-            addSort(0);
-            notifyItemInserted(index+1);
+            arrayList.add(index,data);
+            notifyItemInserted(index);
         }
     }
     public void clear(){

@@ -53,11 +53,11 @@ public abstract class FBCustomAdapter<T extends RecyclerView.ViewHolder,E extend
             if ((index%adInterval)==0){
                 arrayList.add(index+1,data);
                 addSort(index);
-                notifyItemInserted(index+1);
+                notifyItemInserted(index);
             } else {
-                arrayList.add(0,data);
-                addSort(0);
-                notifyItemInserted(index+1);
+                arrayList.add(index,data);
+                addSort(index);
+                notifyItemInserted(index);
             }
         } else {
             arrayList.add(index,data);
@@ -142,4 +142,6 @@ public abstract class FBCustomAdapter<T extends RecyclerView.ViewHolder,E extend
     public abstract RecyclerView.ViewHolder onCreateAllViewHolder(ViewGroup parent, int viewType);
     public abstract void onBindMyViewHolder(T holder, int position);
     public abstract  void onBindFBViewHolder(E holder, int position, NativeAd nativeAd);
+
+
 }

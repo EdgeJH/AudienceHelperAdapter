@@ -2,6 +2,7 @@ package com.edge.audiencehelperadapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,8 @@ public class AdAdapter extends FBAdapter<AdAdapter.CustomHolder> {
 
     @Override
     public void onFBBindViewHolder(final CustomHolder holder, int position) {
-        holder.textView.setText(arrayList.get(position));
+        Log.d("aaaaa",arrayList.get(position)+"zz");
+        holder.textView.setText(String.valueOf(arrayList.get(position)));
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

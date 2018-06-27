@@ -8,7 +8,6 @@ import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdsManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by user1 on 2017-12-01.
@@ -28,8 +27,8 @@ public abstract class FBCustomAdapter<T extends RecyclerView.ViewHolder,E extend
         this.context =context;
         this.arrayList = arrayList;
         this.setting =setting;
-        this.adInterval = setting.getAdInterval();
-        this.mAds = setting.getmAds();
+        this.adInterval = this.setting.getAdInterval();
+        this.mAds = this.setting.getmAds();
         setArrayList();
     }
 
@@ -41,62 +40,64 @@ public abstract class FBCustomAdapter<T extends RecyclerView.ViewHolder,E extend
             }
         }
     }
-    public void addData(Object data){
-        if ((arrayList.size())%adInterval==0){
+
+    public void addData(Object data) {
+        if ((arrayList.size()) % adInterval == 0) {
             arrayList.add(null);
         }
         arrayList.add(data);
         notifyItemInserted(arrayList.size());
     }
-    public void addData(int index ,Object data){
-        if (arrayList.size()!=0){
-            if ((index%adInterval)==0){
-                arrayList.add(index+1,data);
-                addSort(index);
-                notifyItemInserted(index);
+
+    public void addData(int index, Object data) {
+        if (arrayList.size() != 0) {
+            if (index % adInterval == 0 && index != 0) {
+                if (index == arrayList.size()) {
+                    addData(data);
+                } else {
+                    arrayList.add(index,data);
+                    sortArr();
+                }
             } else {
-                arrayList.add(index,data);
-                addSort(index);
-                notifyItemInserted(index);
+                arrayList.add(index, data);
+                sortArr();
             }
+            notifyItemInserted(index);
         } else {
-            arrayList.add(index,data);
+            arrayList.add(index, data);
             notifyItemInserted(index);
         }
     }
-    public void clear(){
+
+    public void clear() {
         arrayList.clear();
         notifyDataSetChanged();
     }
 
-    public void addAllData(ArrayList arrayList){
+    public void addAllData(ArrayList arrayList) {
         this.arrayList = arrayList;
         setArrayList();
     }
-    public void removeData(int position){
-        if ((position%adInterval)!=0){
+
+
+    public void removeData(int position) {
+        if ((position % adInterval) != 0) {
             arrayList.remove(position);
-            removeSort();
-            notifyItemRemoved(position);
-        }
-        if (position==0){
-            arrayList.remove(0);
-            removeSort();
+            sortArr();
             notifyItemRemoved(position);
         }
     }
 
-    private void addSort(int index){
-        for (int i =0; i< arrayList.size(); i++){
-            if ((i%adInterval)==0&&i!=0&&i!=index&&i+1<arrayList.size()){
-                Collections.swap(arrayList,i+1,i);
-            }
-        }
-    }
-    private void removeSort(){
-        for (int i =0; i< arrayList.size(); i++){
-            if ((i%adInterval)==0&&i!=0){
-                Collections.swap(arrayList,i-1,i);
+    private void sortArr() {
+        for (int i = 0; i < arrayList.size(); i++) {
+            if ((i % adInterval) == 0 && i != 0 ) {
+                if (arrayList.get(i)!=null){
+                    arrayList.add(i,null);
+                }
+            } else {
+                if (arrayList.get(i)==null){
+                    arrayList.remove(i);
+                }
             }
         }
     }

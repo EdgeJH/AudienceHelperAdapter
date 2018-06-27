@@ -14,100 +14,103 @@ import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdsManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by user1 on 2017-12-01.
  */
 
-public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     ArrayList arrayList;
     Context context;
     private final int POST_TYPE = 1;
     private final int AD_TYPE = 2;
-    private  int adInterval=10;
+    private int adInterval = 10;
 
     private NativeAdsManager mAds;
     private NativeAd mAd;
     private FBAdapterSetting setting;
-    public FBAdapter(Context context,ArrayList arrayList,FBAdapterSetting setting ) {
+
+    public FBAdapter(Context context, ArrayList arrayList, FBAdapterSetting setting) {
         this.context = context;
         this.arrayList = arrayList;
-        this.setting =setting;
-        this.adInterval = setting.getAdInterval();
-        this.mAds = setting.getmAds();
+        this.setting = setting;
+        this.adInterval = this.setting.getAdInterval();
+        this.mAds = this.setting.getmAds();
         setArrayList();
     }
 
-    private void setArrayList(){
+    private void setArrayList() {
 
-        for (int i =0; i<arrayList.size(); i++){
-            if ((i%adInterval)==0&&i!=0){
-                arrayList.add(i,null);
+        for (int i = 0; i < arrayList.size(); i++) {
+            if ((i % adInterval) == 0 && i != 0) {
+                arrayList.add(i, null);
             }
         }
     }
-    public void addData(Object data){
-        if ((arrayList.size())%adInterval==0){
+
+    public void addData(Object data) {
+        if ((arrayList.size()) % adInterval == 0) {
             arrayList.add(null);
         }
         arrayList.add(data);
         notifyItemInserted(arrayList.size());
     }
-    public void addData(int index ,Object data){
-        if (arrayList.size()!=0){
-            if ((index%adInterval)!=0){
-                arrayList.add(index,data);
-                removeSort();
-                notifyItemInserted(index);
+
+    public void addData(int index, Object data) {
+        if (arrayList.size() != 0) {
+            if (index % adInterval == 0 && index != 0) {
+                if (index == arrayList.size()) {
+                    addData(data);
+                } else {
+                    arrayList.add(index,data);
+                    sortArr();
+                }
+            } else {
+                arrayList.add(index, data);
+                sortArr();
             }
-            if (index==0){
-                arrayList.add(0,data);
-                removeSort();
-                notifyItemInserted(index);
-            }
+            notifyItemInserted(index);
         } else {
-            arrayList.add(index,data);
+            arrayList.add(index, data);
             notifyItemInserted(index);
         }
     }
-    public void clear(){
+
+    public void clear() {
         arrayList.clear();
         notifyDataSetChanged();
     }
 
-    public void addAllData(ArrayList arrayList){
+    public void addAllData(ArrayList arrayList) {
         this.arrayList = arrayList;
         setArrayList();
     }
-    public void removeData(int position){
-        if ((position%adInterval)!=0){
+
+
+    public void removeData(int position) {
+        if ((position % adInterval) != 0) {
             arrayList.remove(position);
-            removeSort();
-            notifyItemRemoved(position);
-        }
-        if (position==0){
-            arrayList.remove(0);
-            removeSort();
-            notifyItemRemoved(position);
+            sortArr();
+             notifyItemRemoved(position);
         }
     }
 
-    private void addSort(int index){
-        for (int i =0; i< arrayList.size(); i++){
-            if ((i%adInterval)==0&&i!=0&&i!=index&&i+1<arrayList.size()){
-                Collections.swap(arrayList,i+1,i);
+    private void sortArr() {
+        for (int i = 0; i < arrayList.size(); i++) {
+            if ((i % adInterval) == 0 && i != 0 ) {
+                if (arrayList.get(i)!=null){
+                    arrayList.add(i,null);
+                }
+            } else {
+                if (arrayList.get(i)==null){
+                    arrayList.remove(i);
+                }
             }
         }
     }
-    private void removeSort(){
-        for (int i =0; i< arrayList.size(); i++){
-            if ((i%adInterval)==0&&i!=0){
-                Collections.swap(arrayList,i-1,i);
-            }
-        }
-    }
+
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -115,9 +118,8 @@ public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
             View inflatedView = LayoutInflater.from(context)
                     .inflate(R.layout.fb_audience_layout, parent, false);
             return new AdHolder(inflatedView);
-        }
-        else {
-                return onFBCreateViewHolder(parent) ;
+        } else {
+            return onFBCreateViewHolder(parent);
         }
 
     }
@@ -125,23 +127,21 @@ public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
-        switch (viewType){
+        switch (viewType) {
             case AD_TYPE:
                 if (mAds != null && mAds.isLoaded()) {
                     mAd = mAds.nextNativeAd();
-                    ((AdHolder)holder).bindView(mAd);
-                }
-                else {
-                    ((AdHolder)holder).bindView(null);
+                    ((AdHolder) holder).bindView(mAd);
+                } else {
+                    ((AdHolder) holder).bindView(null);
                 }
                 break;
             case POST_TYPE:
-                onFBBindViewHolder((T) holder,position);
+                onFBBindViewHolder((T) holder, position);
 
                 break;
         }
     }
-
 
 
     @Override
@@ -152,29 +152,30 @@ public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public int getItemViewType(int position) {
 
-        if (position==0){
+        if (position == 0) {
             return POST_TYPE;
         } else {
-            return  (position%adInterval==0)?AD_TYPE:POST_TYPE;
+            return (position % adInterval == 0) ? AD_TYPE : POST_TYPE;
         }
     }
 
-    public  class AdHolder extends RecyclerView.ViewHolder {
+    public class AdHolder extends RecyclerView.ViewHolder {
         AdIconView nativeAdIcon;
-        TextView nativeAdTitle,nativeAdSocialContext,nativeAdBody,nativeAdCallToAction;
+        TextView nativeAdTitle, nativeAdSocialContext, nativeAdBody, nativeAdCallToAction;
         MediaView nativeAdMedia;
         List<View> clickableViews = new ArrayList<>();
 
         LinearLayout nativeAdContainer;
+
         public AdHolder(View view) {
             super(view);
 
             nativeAdIcon = view.findViewById(R.id.native_ad_icon);
             nativeAdTitle = view.findViewById(R.id.native_ad_title);
-            nativeAdContainer =  view.findViewById(R.id.native_ad_container);
-            nativeAdMedia =  view.findViewById(R.id.native_ad_media);
-            nativeAdSocialContext =view.findViewById(R.id.native_ad_social_context);
-            nativeAdBody =  view.findViewById(R.id.native_ad_body);
+            nativeAdContainer = view.findViewById(R.id.native_ad_container);
+            nativeAdMedia = view.findViewById(R.id.native_ad_media);
+            nativeAdSocialContext = view.findViewById(R.id.native_ad_social_context);
+            nativeAdBody = view.findViewById(R.id.native_ad_body);
             nativeAdCallToAction = view.findViewById(R.id.native_ad_call_to_action);
 
             clickableViews.add(nativeAdMedia);
@@ -192,11 +193,12 @@ public abstract class FBAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vie
                 nativeAdSocialContext.setText(ad.getAdSocialContext());
                 nativeAdBody.setText(ad.getAdBodyText());
                 nativeAdCallToAction.setText(ad.getAdCallToAction());
-                ad.registerViewForInteraction(nativeAdContainer, nativeAdMedia,nativeAdIcon,clickableViews);
+                ad.registerViewForInteraction(nativeAdContainer, nativeAdMedia, nativeAdIcon, clickableViews);
             }
         }
     }
 
-    public abstract  RecyclerView.ViewHolder onFBCreateViewHolder(ViewGroup parent);
-    public abstract void onFBBindViewHolder(T holder , int position);
+    public abstract RecyclerView.ViewHolder onFBCreateViewHolder(ViewGroup parent);
+
+    public abstract void onFBBindViewHolder(T holder, int position);
 }

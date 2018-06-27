@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements FBLoadListener {
                 return true;
             case R.id.add_index:
                 int i2 = adapter.getItemCount();
-                if (i2 > 3) {
+                if (i2 > 2) {
                     adapter.addData(3, String.valueOf(i2) + String.valueOf(i2) + String.valueOf(i2));
                 } else {
                     adapter.addData(0, String.valueOf(i2) + String.valueOf(i2) + String.valueOf(i2));

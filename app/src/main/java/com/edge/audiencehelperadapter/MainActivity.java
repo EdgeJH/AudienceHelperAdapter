@@ -61,6 +61,25 @@ public class MainActivity extends AppCompatActivity implements FBLoadListener {
         recyclerView.setLayoutManager(layoutManager);
     }
 
+    private void dataAddIndext(int  index,Object data){
+        adapter.addData(index,data);
+    }
+
+    private void dataAdd(Object data){
+        adapter.addData(data);
+    }
+
+    private void removeData(int index){
+        adapter.removeData(index);
+    }
+
+    private void addAll(ArrayList arrayList){
+        adapter.addAllData(arrayList);
+    }
+
+    private void clearData(){
+        adapter.clear();
+    }
 
     @Override
     public void onLoadSuccess(NativeAdsManager adsManager) {

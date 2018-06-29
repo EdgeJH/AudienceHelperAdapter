@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements FBLoadListener{
  }
 ```
 
-###Data Management
+### Data Management
 ```java
   private void dataAddIndex(int index,Object data){
         adapter.addData(index,data);
